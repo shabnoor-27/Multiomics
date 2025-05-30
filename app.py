@@ -164,6 +164,7 @@ if genomics and transcriptomics and proteomics:
                 "Mouse Disease Ontology": "DO_Mouse_2021",
                 "Disease Associations": "MGI_Mammalian_Phenotype_Level_4_2021",
                 "KEGG Mouse Metabolites": "KEGG_2019_Mouse",
+                "KEGG Mouse Metabolites": "KEGG_2019_Mouse",
                 "WikiPathways (Mouse)": "WikiPathways_2019_Mouse"
             }
 
@@ -203,6 +204,7 @@ if genomics and transcriptomics and proteomics:
                 "Mouse Disease Ontology": "skyblue",
                 "Disease Associations": "lightcoral",
                 "KEGG Mouse Metabolites": "pink",
+                "KEGG Mouse Metabolites": "orange",
                 "WikiPathways (Mouse)": "lightgreen"
             }
 
