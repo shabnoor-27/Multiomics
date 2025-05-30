@@ -27,7 +27,7 @@ st.title("🧬 Multi-Omics Integration Vizzhy App")
 with st.sidebar:
     st.markdown("---")
     st.markdown("**👨‍💻 Created by: SHABNOOR**")
-    st.markdown("[LinkedIn](https://www.linkedin.com/in/priyadarshini24) | [GitHub](https://github.com/priyadarshinikp1)")
+    st.markdown("[LinkedIn](https://www.linkedin.com/in/priyadarshini24) | [GitHub](https://github.com/shabnoor-27)")
 
 
 # -----------------------------
@@ -161,10 +161,11 @@ if genomics and transcriptomics and proteomics:
         if run_enrichment:
             st.header("📊 Enrichment Analyses")
             libraries = {
-                "Reactome Pathways": "Reactome_2016",
-                "Disease Associations": "DisGeNET",
-                "HMDB Metabolites": "HMDB_Metabolites"
+                "Mouse Disease Ontology": "DO_Mouse_2021",
+                "Disease Associations": "MGI_Mammalian_Phenotype_Level_4_2021",
+                "WikiPathways (Mouse)": "WikiPathways_2019_Mouse"
             }
+
 
             for name, lib in libraries.items():
                 try:
@@ -190,7 +191,7 @@ if genomics and transcriptomics and proteomics:
             net.force_atlas_2based()
 
             legend_items = {
-                "Gene": 'gray', "Protein IDs": 'gold',
+                "Gene": 'gray-+', "Protein IDs": 'gold',
                 "Pathway": 'skyblue', "Metabolite": 'lightgreen', "Disease": 'lightcoral'
             }
 
@@ -198,9 +199,9 @@ if genomics and transcriptomics and proteomics:
                 net.add_node(f"legend_{label}", label=label, shape='box', color=color, size=20, x=-1000, y=-i*50, physics=False, fixed=True)
 
             color_map = {
-                "Reactome Pathways": "skyblue",
+                "Mouse Disease Ontology": "skyblue",
                 "Disease Associations": "lightcoral",
-                "HMDB Metabolites": "lightgreen"
+                "WikiPathways (Mouse)": "lightgreen"
             }
 
             for name, df in results.items():
