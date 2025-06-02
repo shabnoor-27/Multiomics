@@ -235,23 +235,36 @@ if genomics and transcriptomics and proteomics:
                 net.save_graph(tmp_file.name)
                 st.components.v1.html(open(tmp_file.name, 'r', encoding='utf-8').read(), height=800)
 
-        if show_association_table and raw_assoc_data:
-            st.subheader("📄 Gene-Protein-Term Association Summary")
-            df = pd.DataFrame(raw_assoc_data)
+       if show_association_table and raw_assoc_data:
+        st.subheader("📄 Gene-Protein-Term Association Summary")
+
+        # Convert raw data to DataFrame
+        df = pd.DataFrame(raw_assoc_data)
+
+        # Ensure required columns exist
+        required_columns = ['Gene', 'Protein IDs', 'Pathway', 'Disease', 'Metabolite']
+        if not all(col in df.columns for col in required_columns):
+            st.warning("Some required columns are missing in the data.")
+            st.write("Expected columns:", required_columns)
+            st.write("Found columns:", list(df.columns))
+        else:
+            # Group and aggregate data
             assoc_df = df.groupby('Gene').agg({
-                'Protein IDs': lambda x: ';'.join(set(filter(None, x))),
-                'Pathway': lambda x: ';'.join(set(filter(None, x))),
-                'Disease': lambda x: ';'.join(set(filter(None, x))),
-                'Metabolite': lambda x: ';'.join(set(filter(None, x)))
+                'Protein IDs': lambda x: ';'.join(set(filter(None, map(str, x)))),
+                'Pathway': lambda x: ';'.join(set(filter(None, map(str, x)))),
+                'Disease': lambda x: ';'.join(set(filter(None, map(str, x)))),
+                'Metabolite': lambda x: ';'.join(set(filter(None, map(str, x))))
             }).reset_index()
 
-            assoc_df['non_nulls'] = assoc_df.notnull().sum(axis=1)
+            # Count non-null fields to sort
+            assoc_df['non_nulls'] = assoc_df.replace('', pd.NA).notnull().sum(axis=1)
             assoc_df = assoc_df.sort_values(by='non_nulls', ascending=False).drop(columns='non_nulls')
+
+            # Display table
             st.dataframe(assoc_df)
 
-    except Exception as e:
-        st.error(f"Integration error: {e}")
-
+except Exception as e:
+    st.error(f"Integration error: {e}")
 # -----------------------------
 # UMAP + KMeans Clustering
 # -----------------------------
