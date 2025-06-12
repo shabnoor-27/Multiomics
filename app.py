@@ -48,14 +48,6 @@ st.image("logo.png", width=200)
  
 st.title("🧬 Multi-Omics Integration Vizzhy App")
  
- 
- 
-with st.sidebar:
-st.markdown("**👨‍💻 Created by: SHABNOOR**")
-st.markdown(" [GitHub](https://github.com/shabnoor-27)")
- 
- 
- 
 # -----------------------------
  
 # File Upload Section
