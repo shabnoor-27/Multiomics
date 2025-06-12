@@ -51,11 +51,7 @@ st.title("🧬 Multi-Omics Integration Vizzhy App")
  
  
 with st.sidebar:
- 
-st.markdown("---")
- 
 st.markdown("**👨‍💻 Created by: SHABNOOR**")
- 
 st.markdown("[LinkedIn](https://www.linkedin.com/in/priyadarshini24) | [GitHub](https://github.com/shabnoor-27)")
  
  
