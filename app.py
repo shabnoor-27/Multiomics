@@ -278,81 +278,18 @@ if genomics and transcriptomics and proteomics:
 # -----------------------------
 st.header("📉 UMAP Clustering")
 
-if genomics and transcriptomics and proteomics:
-    try:
-        # Check if filtered DataFrames exist
-        if all(name in locals() for name in ['gdf_filtered', 'tdf_filtered', 'pdf_filtered']):
-
-            # Merge datasets on common 'Gene'
-            merged_df = pd.merge(
-                gdf_filtered[['Gene', 'log2FC']],
-                tdf_filtered[['Gene', 'pVal']],
-                on='Gene'
-            )
-            merged_df = pd.merge(
-                merged_df,
-                pdf_filtered[['Gene', 'Intensity']],
-                on='Gene'
-            )
-
-            if merged_df.empty:
-                # No common genes after filtering
-                st.error("❌ UMAP Clustering failed: No common genes after filtering.")
-
-                # Display gene counts and overlaps
-                g_genes = set(gdf_filtered['Gene'])
-                t_genes = set(tdf_filtered['Gene'])
-                p_genes = set(pdf_filtered['Gene'])
-                common_genes = g_genes & t_genes & p_genes
-
-                st.warning(f"🧬 Genomics genes: {len(g_genes)}")
-                st.warning(f"🧪 Transcriptomics genes: {len(t_genes)}")
-                st.warning(f"🧫 Proteomics genes: {len(p_genes)}")
-                st.info(f"🔗 Common genes: {len(common_genes)}")
-
-                if len(common_genes) == 0:
-                    st.markdown("⚠️ Try relaxing the sidebar filters:")
-                    st.markdown("- Lower **log2FC** (Genomics)")
-                    st.markdown("- Increase **p-value** (Transcriptomics)")
-                    st.markdown("- Lower **Intensity** (Proteomics)")
-
-            else:
-                # Valid merged dataset
-                st.success("✅ Common genes found and merged successfully!")
-                st.write("📋 Merged Data Preview", merged_df.head())
-
-                features = merged_df[['log2FC', 'pVal', 'Intensity']]
-
-                # Ensure there's at least one row for StandardScaler
-                if features.shape[0] > 0:
-                    features_scaled = StandardScaler().fit_transform(features)
-
-                    # Run UMAP
-                    reducer = umap.UMAP(random_state=42)
-                    embedding = reducer.fit_transform(features_scaled)
-
-                    # Run KMeans
-                    kmeans = KMeans(n_clusters=3, random_state=42).fit(embedding)
-                    merged_df['Cluster'] = kmeans.labels_
-
-                    # Show plot
+                    # UMAP Scatter Plot
                     fig = px.scatter(
+                        merged_df,
                         x=embedding[:, 0],
                         y=embedding[:, 1],
                         color=merged_df['Cluster'].astype(str),
-                        labels={'x': 'UMAP 1', 'y': 'UMAP 2'},
-                        title="UMAP Clustering of Integrated Omics Data"
+                        hover_data=['Gene', 'log2FC', 'pVal', 'Intensity'],
+                        title="UMAP Projection with KMeans Clustering",
+                        labels={'x': 'UMAP-1', 'y': 'UMAP-2', 'Cluster': 'Cluster'}
                     )
-                    st.plotly_chart(fig)
-
-                    # Optional: Display cluster sizes
-                    st.write("📊 Cluster Counts", merged_df['Cluster'].value_counts())
-
-                else:
-                    st.error("UMAP clustering error: No data available after merging.")
-
-        else:
-            st.warning("❗ Filtered data not found. Run data integration first.")
+                    st.plotly_chart(fig, use_container_width=True)
 
     except Exception as e:
-        st.error(f"🔥 UMAP clustering error: {e}")
+        st.error(f"❌ UMAP Clustering error: {e}")
+
